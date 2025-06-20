@@ -645,7 +645,7 @@ export default function Index({
           //central cordero
           if (group[i]?.fiscal == "Terminal" && group[i + 1]?.fiscal == "Central Cordero") {
             const ruta = rutas_.find((ruta: any) => ruta.nombre == group[i].ruta);
-            let tiempo = (ruta?.nombre == '4/2') ? 77 : 72;
+            let tiempo = (ruta?.nombre == '4/2 S') ? 77 : 72;
             const time1 = convertToMinutes(group[i].hora_servidor);
             const time2 = convertToMinutes(group[i + 1].hora_telefono);
             const diff = time2 - time1;
@@ -658,7 +658,7 @@ export default function Index({
 
           if (group[i]?.fiscal == "Terminal" && group[i + 2]?.fiscal == "Central Cordero") {
             const ruta = rutas_.find((ruta: any) => ruta.nombre == group[i].ruta);
-            let tiempo = (ruta?.nombre == '4/2') ? 77 : 72;
+            let tiempo = (ruta?.nombre == '4/2 S') ? 77 : 72;
             const time1 = convertToMinutes(group[i].hora_servidor);
             const time2 = convertToMinutes(group[i + 2].hora_telefono);
             const diff = time2 - time1;
@@ -670,7 +670,7 @@ export default function Index({
           }
           if (group[i]?.fiscal == "Terminal" && group[i + 3]?.fiscal == "Central Cordero") {
             const ruta = rutas_.find((ruta: any) => ruta.nombre == group[i].ruta);
-            let tiempo = (ruta?.nombre == '4/2') ? 77 : 72;
+            let tiempo = (ruta?.nombre == '4/2 S') ? 77 : 72;
             const time1 = convertToMinutes(group[i].hora_servidor);
             const time2 = convertToMinutes(group[i + 3].hora_telefono);
             const diff = time2 - time1;
@@ -682,7 +682,7 @@ export default function Index({
           }
           if (group[i]?.fiscal == "Terminal" && group[i + 4]?.fiscal == "Central Cordero") {
             const ruta = rutas_.find((ruta: any) => ruta.nombre == group[i].ruta);
-            let tiempo = (ruta?.nombre == '4/2') ? 77 : 72;
+            let tiempo = (ruta?.nombre == '4/2 S') ? 77 : 72;
             const time1 = convertToMinutes(group[i].hora_servidor);
             const time2 = convertToMinutes(group[i + 4].hora_telefono);
             const diff = time2 - time1;
@@ -694,7 +694,7 @@ export default function Index({
           }
           if (group[i]?.fiscal == "Terminal" && group[i + 5]?.fiscal == "Central Cordero") {
             const ruta = rutas_.find((ruta: any) => ruta.nombre == group[i].ruta);
-            let tiempo = (ruta?.nombre == '4/2') ? 77 : 72;
+            let tiempo = (ruta?.nombre == '4/2 S') ? 77 : 72;
             const time1 = convertToMinutes(group[i].hora_servidor);
             const time2 = convertToMinutes(group[i + 5].hora_telefono);
             const diff = time2 - time1;
