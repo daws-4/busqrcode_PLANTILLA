@@ -360,6 +360,18 @@ export default function Index({
       label: "Fiscal",
     },
   ];
+
+  if (fiscal !== "Terminal") {
+    // Hacemos una copia del arreglo para no modificar el original directamente (buena práctica).
+    columns = columns.map(column => {
+      if (column.key === "hora_servidor") {
+        // Si encontramos la columna, devolvemos un nuevo objeto con la key modificada.
+        return { ...column, key: "hora_telefono" };
+      }
+      // Para las demás columnas, las devolvemos sin cambios.
+      return column;
+    });
+  }
   if (ruta && unidad) {
     columns = [
       {
