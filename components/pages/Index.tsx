@@ -361,6 +361,21 @@ export default function Index({
     },
   ];
 
+  let columnsFisc = [
+    {
+      key: "Fiscal", // Debe coincidir con `item.Fiscal`
+      label: "Punto-Fiscal"
+    },
+    {
+      key: "Unidad", // Debe coincidir con `item.Unidad`
+      label: "Control-Unidad"
+    },
+    {
+      key: "cantidad", // Debe coincidir con `item.cantidad`
+      label: "Cantidad"
+    }
+  ];
+
   if (fiscal !== "Terminal") {
     // Hacemos una copia del arreglo para no modificar el original directamente (buena práctica).
     columns = columns.map(column => {
@@ -463,15 +478,7 @@ export default function Index({
     settimeCompare(null)
   };
 
-  //comparación de datos
-  console.log(
-    "fiscalA",
-    fiscalA,
-    "fiscalB",
-    fiscalB,
-    "timeCompare",
-    timeCompare
-  );
+ 
   const fiscalAExists = rows.some((row: any) => row.fiscal == fiscalA);
   const fiscalBExists = rows.some((row: any) => row.fiscal == fiscalB);
 
@@ -492,7 +499,7 @@ export default function Index({
 
   // Lista de todas las unidades que existen en el array de timestamps
   const unidadesordenadas = [...new Set(setTimestamps.map((timestamp: any) => timestamp.unidad))].sort((a, b) => a - b);
-  console.log("Unidades ordenadas:", unidadesordenadas);
+  // console.log("Unidades ordenadas:", unidadesordenadas);
   // setUnidadesOrdenadas(unidadesordenadas);
 
 
@@ -1105,17 +1112,73 @@ export default function Index({
 
   // Llamar a la función de comparación
   const registrosOrdenados = compareTimestamps(setTimestamps);
-  console.log(registrosOrdenados);
+  // console.log(registrosOrdenados);
 
   // Filtrar registros retardados
   const registrosRetardados = getRegistrosRetardados(registrosOrdenados);
-  console.log(registrosRetardados);
+  // console.log(registrosRetardados);
 
   const listaRetardados = registrosRetardados.flatMap(registro =>
     registro.group.filter((item: { onTime: boolean; }) => item.onTime === false)
   );
-  console.log(listaRetardados, 'lista retardados')
 
+  const conteoPorFiscal = setTimestamps.reduce((acumulador, timestamp) => {
+    const fiscal = timestamp.fiscal;
+    // Si el fiscal ya existe en el acumulador, incrementa su contador.
+    // Si no, inicialízalo en 1.
+    acumulador[fiscal] = (acumulador[fiscal] || 0) + 1;
+    return acumulador;
+  }, {});
+
+  console.log(conteoPorFiscal);
+
+  const conteoPorFiscalYUnidad = setTimestamps.reduce((acumulador, timestamp) => {
+    // Se crea una clave única combinando fiscal y unidad
+    const clave = `${timestamp.fiscal}-${timestamp.unidad}`;
+
+    // La lógica de conteo es la misma, pero usando la nueva clave
+    acumulador[clave] = (acumulador[clave] || 0) + 1;
+    return acumulador;
+  }, {});
+
+  console.log(conteoPorFiscalYUnidad);
+
+
+  const conteoAnidado = setTimestamps.reduce((acumulador, timestamp) => {
+    const { fiscal, unidad } = timestamp;
+
+    // Si el fiscal no existe en el acumulador, lo crea como un objeto vacío
+    if (!acumulador[fiscal]) {
+      acumulador[fiscal] = {};
+    }
+
+    // Incrementa el contador para la unidad dentro del fiscal correspondiente
+    acumulador[fiscal][unidad] = (acumulador[fiscal][unidad] || 0) + 1;
+
+    return acumulador;
+  }, {});
+
+  console.log(conteoAnidado);
+  const datosParaTabla = [];
+
+  // Iteramos sobre cada 'fiscal' en el objeto (fiscal_A, fiscal_B, etc.)
+  for (const fiscal in conteoAnidado) {
+    // Iteramos sobre cada 'unidad' dentro del fiscal actual (unidad_1, unidad_2, etc.)
+    for (const unidad in conteoAnidado[fiscal]) {
+      // Obtenemos la cantidad
+      const cantidad = conteoAnidado[fiscal][unidad];
+
+      // Creamos un nuevo objeto para la fila y lo añadimos al array
+      // Las claves deben coincidir con las definidas en tus columnas ('Fiscal', 'Unidad', 'cantidad')
+      datosParaTabla.push({
+        Fiscal: fiscal,
+        Unidad: unidad,
+        cantidad: cantidad
+      });
+    }
+  }
+
+  console.log(datosParaTabla);
 
   //descargar imagenes
   const [selectedRegistro, setSelectedRegistro] = useState<any[]>()
@@ -1525,10 +1588,39 @@ export default function Index({
           <p>No hay Retardados</p>
         )}
       </section>
+
+      <section className="w-1/3 max-w-4xl mx-auto flex flex-col items-center justify-center gap-4 py-8 md:py-10 px-4 sm:px-6 lg:px-8">
+          <h1 className='text-xl font-bold'>Control de puntos</h1>
+        {datosParaTabla.length > 0 ? (
+          <Table ref={targetRef} className='max-w-3xl' aria-label="Example table with dynamic content">
+            <TableHeader columns={columnsFisc} aria-label="Tabla">
+              {(column) => (
+                <TableColumn key={column.key}>{column.label}</TableColumn>
+              )}
+            </TableHeader>
+            <TableBody items={datosParaTabla} aria-label="Tabla">
+              {(item) => (
+                <TableRow
+                  key={`${item.Fiscal}-${item.Unidad}`} 
+                  className={classNames("rounded")}
+                  aria-label="Tabla"
+                >
+                  {(columnKey) => (
+                    <TableCell>
+                      {getKeyValue(item, columnKey)}
+                    </TableCell>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        ) : (
+          <p>No hay Registros</p>
+        )}
+        </section>
       
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
-        {/* body*/}
 
         <h1 className="text-xl font-bold">Registros diarios</h1>
         <div className={classNames("grid grid-cols-1 md:grid-cols-3 gap-4")}>
