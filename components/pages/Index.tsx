@@ -1320,6 +1320,7 @@ export default function Index({
   //pdf de la lista de retardados
 
   const { toPDF, targetRef } = usePDF({ filename: `retardados${fecha}` });
+  const { toPDF: toPDFPuntos, targetRef: targetRefPuntos } = usePDF({ filename: `puntos${fecha}` });
 
 
   return (
@@ -1591,8 +1592,9 @@ export default function Index({
 
       <section className="w-1/3 max-w-4xl mx-auto flex flex-col items-center justify-center gap-4 py-8 md:py-10 px-4 sm:px-6 lg:px-8">
           <h1 className='text-xl font-bold'>Control de puntos</h1>
+        <Button onPress={() => toPDFPuntos()} className="">Descargar Pdf </Button>
         {datosParaTabla.length > 0 ? (
-          <Table ref={targetRef} className='max-w-3xl' aria-label="Example table with dynamic content">
+          <Table ref={targetRefPuntos} className='max-w-3xl' aria-label="Example table with dynamic content">
             <TableHeader columns={columnsFisc} aria-label="Tabla">
               {(column) => (
                 <TableColumn key={column.key}>{column.label}</TableColumn>
