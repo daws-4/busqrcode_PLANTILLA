@@ -367,10 +367,6 @@ export default function Index({
       label: "Punto-Fiscal"
     },
     {
-      key: "Unidad", // Debe coincidir con `item.Unidad`
-      label: "Control-Unidad"
-    },
-    {
       key: "cantidad", // Debe coincidir con `item.cantidad`
       label: "Cantidad"
     }
@@ -1122,62 +1118,27 @@ export default function Index({
     registro.group.filter((item: { onTime: boolean; }) => item.onTime === false)
   );
 
-  const conteoPorFiscal = setTimestamps.reduce((acumulador, timestamp) => {
+  const datosParaTabla = setTimestamps.reduce((acumulador, timestamp) => {
     const fiscal = timestamp.fiscal;
-    // Si el fiscal ya existe en el acumulador, incrementa su contador.
-    // Si no, inicialízalo en 1.
-    acumulador[fiscal] = (acumulador[fiscal] || 0) + 1;
-    return acumulador;
-  }, {});
 
-  console.log(conteoPorFiscal);
+    // Busca si el fiscal ya existe en nuestro array 'acumulador'
+    const fiscalExistente = acumulador.find((item: { Fiscal: any; }) => item.Fiscal === fiscal);
 
-  const conteoPorFiscalYUnidad = setTimestamps.reduce((acumulador, timestamp) => {
-    // Se crea una clave única combinando fiscal y unidad
-    const clave = `${timestamp.fiscal}-${timestamp.unidad}`;
-
-    // La lógica de conteo es la misma, pero usando la nueva clave
-    acumulador[clave] = (acumulador[clave] || 0) + 1;
-    return acumulador;
-  }, {});
-
-  console.log(conteoPorFiscalYUnidad);
-
-
-  const conteoAnidado = setTimestamps.reduce((acumulador, timestamp) => {
-    const { fiscal, unidad } = timestamp;
-
-    // Si el fiscal no existe en el acumulador, lo crea como un objeto vacío
-    if (!acumulador[fiscal]) {
-      acumulador[fiscal] = {};
-    }
-
-    // Incrementa el contador para la unidad dentro del fiscal correspondiente
-    acumulador[fiscal][unidad] = (acumulador[fiscal][unidad] || 0) + 1;
-
-    return acumulador;
-  }, {});
-
-  console.log(conteoAnidado);
-  const datosParaTabla = [];
-
-  // Iteramos sobre cada 'fiscal' en el objeto (fiscal_A, fiscal_B, etc.)
-  for (const fiscal in conteoAnidado) {
-    // Iteramos sobre cada 'unidad' dentro del fiscal actual (unidad_1, unidad_2, etc.)
-    for (const unidad in conteoAnidado[fiscal]) {
-      // Obtenemos la cantidad
-      const cantidad = conteoAnidado[fiscal][unidad];
-
-      // Creamos un nuevo objeto para la fila y lo añadimos al array
-      // Las claves deben coincidir con las definidas en tus columnas ('Fiscal', 'Unidad', 'cantidad')
-      datosParaTabla.push({
+    if (fiscalExistente) {
+      // Si ya existe, simplemente incrementa su contador
+      fiscalExistente.cantidad++;
+    } else {
+      // Si es la primera vez que lo vemos, lo añadimos al array con cantidad 1
+      acumulador.push({
         Fiscal: fiscal,
-        Unidad: unidad,
-        cantidad: cantidad
+        cantidad: 1,
       });
     }
-  }
 
+    return acumulador;
+  }, []); // El valor inicial del acumulador es un array vacío []
+
+  // 3. Resultado final listo para la tabla
   console.log(datosParaTabla);
 
   //descargar imagenes
@@ -1603,7 +1564,7 @@ export default function Index({
             <TableBody items={datosParaTabla} aria-label="Tabla">
               {(item) => (
                 <TableRow
-                  key={`${item.Fiscal}-${item.Unidad}`} 
+                  key={`${(item as any).fiscal}`} 
                   className={classNames("rounded")}
                   aria-label="Tabla"
                 >
