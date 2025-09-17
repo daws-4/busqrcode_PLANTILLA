@@ -107,24 +107,15 @@ export async function POST(request: any) {
 
     //buscar todas las rutas y filtrar la ruta actual
     const findRutas = await rutas.find();
-    const findRuta = findRutas.find((ruta) => ruta._id == id_ruta);
 
     // Buscar el fiscal con ubicación 'Terminal' o 'Barrancas'
     const findFiscales = await fiscales.find();
-    const terminalFiscal = findFiscales.find(
-      (fiscal) => fiscal.ubicacion === "Terminal"
-    );
-    const R1R2Fiscal = findFiscales.find(
-      (fiscal) => fiscal.ubicacion === "R1R2"
-    );
     const centralFiscal = findFiscales.find(
-      (fiscal) => fiscal.ubicacion === "Central Cordero"
+      (fiscal) => fiscal.ubicacion === "Central"
     );
 
     // Filtrar el registro anterior más cercano en el lapso de 60 minutos
     const closestTimestamp = unidTimestamps.find((timestamp) => {
-      const terminalFiscalId = terminalFiscal?._id;
-      const R1R2FiscalId = R1R2Fiscal?._id;
       const centralFiscalId = centralFiscal?._id;
 
       // Buscar fiscales con setHora === true
@@ -134,8 +125,6 @@ export async function POST(request: any) {
 
       // Verificar si el timestamp.id_fiscal coincide con el fiscal del terminal, barrancas o alguno con setHora === true
       const isValidFiscal =
-        timestamp.id_fiscal.toString() === terminalFiscalId?.toString() ||
-        timestamp.id_fiscal.toString() === R1R2FiscalId?.toString() ||
         timestamp.id_fiscal.toString() === centralFiscalId?.toString() ||
         setHoraFiscales.some(
           (fiscalId) => timestamp.id_fiscal.toString() === fiscalId?.toString()
@@ -180,7 +169,18 @@ export async function POST(request: any) {
       });
       const saveTimestamp = await timestamp.save();
       return NextResponse.json(saveTimestamp);
-    } else {
+    } else if(findFiscal.setruta){
+      
+      const timestamp = new timestamps({
+        id_ruta,
+        id_unidad,
+        id_fiscal,
+        timestamp_salida : timestamp_telefono,
+        timestamp_telefono
+      });
+      const saveTimestamp = await timestamp.save();
+      return NextResponse.json(saveTimestamp);
+    }else  {
       if (closestTimestamp) {
         console.log(closestTimestamp, "Timestamp más cercano encontrado");
         const timestamp = new timestamps({

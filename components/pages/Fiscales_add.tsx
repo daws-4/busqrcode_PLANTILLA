@@ -16,6 +16,7 @@ export default function Fiscales_add({ unidades }: UnidadesProps) {
 
     const [password, setPassword] = useState('');
     const [hora, setHora] = useState(false);
+    const [ruta, setRuta] = useState(false);
     const [delet, setDelete] = useState(false);
 
 
@@ -26,8 +27,9 @@ export default function Fiscales_add({ unidades }: UnidadesProps) {
             ubicacion: form.get('ubicacion'),
             numero: form.get('numero'),
             username: form.get('username'),
-            setDelete: delet,
+            setdelete: delet,
             sethora: hora,
+            setruta: ruta,
             password: await bcrypt.hash(password, 10)
         }
         try {
@@ -66,10 +68,11 @@ export default function Fiscales_add({ unidades }: UnidadesProps) {
                                     <form onSubmit={submitForm} className="grid gap-4 pr-3 w-full">
                                         <Textarea name="ubicacion" isRequired required type='text' label='Ubicación del Fiscal' />
                                         <Input name="numero" isRequired required type='text' label='Número del Fiscal' />
-                                        <Input name='username' isRequired required type='text' label='Nombre de usuario'/>
-                                        <Input name='password' isRequired required type='text' min={8} value={password} onChange={(e)=> setPassword(e.target.value)} label='Contraseña'/>
+                                        <Input name='username' isRequired required type='text' label='Nombre de usuario' />
+                                        <Input name='password' isRequired required type='text' min={8} value={password} onChange={(e) => setPassword(e.target.value)} label='Contraseña' />
                                         <Switch name='sethora' defaultSelected={false} onChange={(e) => setHora(e.target.checked)}>¿Selecciona Hora?</Switch>
-                                        <Switch name='setDelete' defaultSelected={false} onChange={(e) => setDelete(e.target.checked)}>¿Elimina Registros?</Switch>
+                                        <Switch name='setruta' defaultSelected={false} onChange={(e) => setRuta(e.target.checked)}>¿Establece Ruta?</Switch>
+                                        <Switch name='setdelete' defaultSelected={false} onChange={(e) => setDelete(e.target.checked)}>¿Elimina Registros?</Switch>
                                         <Button type="submit" variant="shadow" className="w-full bg-green-700 text-slate-100">Agregar Fiscal</Button>
                                     </form>
                                 </div>

@@ -22,6 +22,7 @@ export default function Plantillas_Pizarras_id({ fiscal, params }: Plantillas_Pi
     const [password, setPassword] = useState('')
     const [hora, setHora] = useState(unid.sethora);
     const [delet, setDelete] = useState(unid.setdelete);
+    const [ruta, setRuta] = useState(unid.setruta);
 
     const submitForm = async (e: any) => {
         e.preventDefault();
@@ -32,6 +33,7 @@ export default function Plantillas_Pizarras_id({ fiscal, params }: Plantillas_Pi
             password: await bcrypt.hash(password, 10),
             id: fiscId,
             sethora: hora,
+            setruta: ruta,
             setdelete: delet
         }
         try {
@@ -64,7 +66,7 @@ export default function Plantillas_Pizarras_id({ fiscal, params }: Plantillas_Pi
         const deletedPizarra = window.confirm('¿Estás seguro de eliminar la Unidad?, esta acción no se puede deshacer')
         if (deletedPizarra) {
             try {
-                const response = await axios.delete(`/api/fiscales`, { data: { id: params.fisc} });
+                const response = await axios.delete(`/api/fiscales`, { data: { id: params.fisc } });
                 console.log(response)
                 if (response.status == 200) {
                     toast.success('Fiscal eliminado con éxito', { onClose: () => router.push('/fiscales') })
@@ -95,7 +97,8 @@ export default function Plantillas_Pizarras_id({ fiscal, params }: Plantillas_Pi
                                         <Input name='password' isRequired required type='text' label='Contraseña' min={8} onChange={(e) => setPassword(e.target.value)} />
                                         <Textarea name="ubicacion" isRequired required type='text' value={ubicacion} label='Ubicacion del Fiscal' onChange={(e) => setUbicacion(e.target.value)} />
                                         <Switch name='sethora' defaultSelected={hora} onChange={(e) => setHora(e.target.checked)}>¿Selecciona Hora?</Switch>
-                                        <Switch name='sethora' defaultSelected={delet} onChange={(e) => setDelete(e.target.checked)}>¿Elimina Registros?</Switch>
+                                        <Switch name='setruta' defaultSelected={ruta} onChange={(e) => setRuta(e.target.checked)}>¿Establece Ruta?</Switch>
+                                        <Switch name='setdelete' defaultSelected={delet} onChange={(e) => setDelete(e.target.checked)}>¿Elimina Registros?</Switch>
                                         <div className="grid grid-cols-2 gap-4 justify-center items-center">
                                             <Button type="submit" variant="shadow" className="w-full bg-green-700 text-slate-100"> Editar Fiscal</Button>
                                             <Button onClick={() => deletePizarra()} variant="shadow" className="lg:w-full  bg-red-700 text-slate-100">Eliminar Fiscal</Button>

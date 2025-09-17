@@ -474,7 +474,7 @@ export default function Index({
     settimeCompare(null)
   };
 
- 
+
   const fiscalAExists = rows.some((row: any) => row.fiscal == fiscalA);
   const fiscalBExists = rows.some((row: any) => row.fiscal == fiscalB);
 
@@ -542,10 +542,10 @@ export default function Index({
         // Comparar la posición 0 con la posición 1 solo si el primer fiscal es "Terminal" y el segundo es "Centro"
         // comparación de tiempos para las rutas
 
- 
+
         //confitería el loro
         for (let i = 0; i < group.length - 1; i++) {
-       
+
           if (group[i]?.fiscal == "Central" && group[i + 1]?.fiscal == "Terminal") {
             const time1 = convertToMinutes(group[i].hora_servidor);
             const time2 = convertToMinutes(group[i + 1].hora_telefono);
@@ -556,7 +556,7 @@ export default function Index({
             group[i + 1].diff = diff;
             group[i + 1].delay = diff > 10 ? diff - 10 : 0;
           }
-       
+
         }
         const sorted = {
           title: key,
@@ -984,14 +984,14 @@ export default function Index({
         </div>
       </section>}
 
-       {/* lista de retardados */}
+      {/* lista de retardados */}
 
 
-      <section  className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 px-4 sm:px-6 lg:px-8 xl:px-12">
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 px-4 sm:px-6 lg:px-8 xl:px-12">
         <h1 className="text-xl font-bold">Lista de Retardados</h1>
         <Button onPress={() => toPDF()} className="">Descargar Pdf </Button>
         {listaRetardados.length > 0 ? (
-          <Table ref={targetRef}  className='max-w-3xl' aria-label="Example table with dynamic content">
+          <Table ref={targetRef} className='max-w-3xl' aria-label="Example table with dynamic content">
             <TableHeader columns={columns2} aria-label="Tabla">
               {(column) => (
                 <TableColumn key={column.key}>{column.label}</TableColumn>
@@ -1021,7 +1021,7 @@ export default function Index({
       </section>
 
       <section className="w-1/3 max-w-4xl mx-auto flex flex-col items-center justify-center gap-4 py-8 md:py-10 px-4 sm:px-6 lg:px-8">
-          <h1 className='text-xl font-bold'>Control de puntos</h1>
+        <h1 className='text-xl font-bold'>Control de puntos</h1>
         <Button onPress={() => toPDFPuntos()} className="">Descargar Pdf </Button>
         {datosParaTabla.length > 0 ? (
           <Table ref={targetRefPuntos} className='max-w-3xl' aria-label="Example table with dynamic content">
@@ -1030,10 +1030,10 @@ export default function Index({
                 <TableColumn key={column.key}>{column.label}</TableColumn>
               )}
             </TableHeader>
-            <TableBody items={datosParaTabla} aria-label="Tabla">
+            <TableBody items={datosParaTabla.map((it:any, i:any) => ({ ...it, __rowIndex: i }))} aria-label="Tabla">
               {(item) => (
                 <TableRow
-                  key={`${(item as any).fiscal}`} 
+                  key={`${(item as any).Fiscal ?? 'fiscal'}-${(item as any).__rowIndex}`}
                   className={classNames("rounded")}
                   aria-label="Tabla"
                 >
@@ -1049,8 +1049,8 @@ export default function Index({
         ) : (
           <p>No hay Registros</p>
         )}
-        </section>
-      
+      </section>
+
       <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
 
 

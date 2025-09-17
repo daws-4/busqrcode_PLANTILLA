@@ -28,6 +28,10 @@ const fiscales = new Schema(
         type: Boolean,
         default: false,
     },
+    setruta:{
+        type: Boolean,
+        default: false,
+    },
     setdelete:{
         type: Boolean,
         default: false,
