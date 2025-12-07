@@ -9,6 +9,19 @@ const jwtName = process.env.JWT_NAME;
 if (!jwtName) {
   throw new Error("JWT_NAME is not defined in environment variables");
 }
+
+export async function GET() {
+  try {
+    const allUnidades = await unidades
+      .find({}, { numero: 1, _id: 1 })
+      .sort({ numero: 1 });
+    
+    return NextResponse.json(allUnidades);
+  } catch (error) {
+    return NextResponse.json((error as Error).message, { status: 400 });
+  }
+}
+
 export async function POST(request: any) {
   const { placa, numero, nombre_conductor, telefono_conductor, id_grupo } =
     await request.json();
