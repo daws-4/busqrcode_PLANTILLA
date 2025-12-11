@@ -13,13 +13,15 @@ export async function POST(request: any) {
     id_fiscal,
     timestamp_telefono,
     timestamp_salida,
+    counter,
   } = await request.json();
   console.log(
     id_ruta,
     id_unidad,
     id_fiscal,
     timestamp_telefono,
-    timestamp_salida
+    timestamp_salida,
+    counter
   );
 
   const formatHour = (dateString: string) => {
@@ -166,6 +168,7 @@ export async function POST(request: any) {
         id_fiscal,
         timestamp_telefono,
         timestamp_salida,
+        counter,
       });
       const saveTimestamp = await timestamp.save();
       return NextResponse.json(saveTimestamp);
@@ -176,7 +179,8 @@ export async function POST(request: any) {
         id_unidad,
         id_fiscal,
         timestamp_salida : timestamp_telefono,
-        timestamp_telefono
+        timestamp_telefono,
+        counter,
       });
       const saveTimestamp = await timestamp.save();
       return NextResponse.json(saveTimestamp);
@@ -189,6 +193,7 @@ export async function POST(request: any) {
           id_fiscal,
           timestamp_telefono,
           timestamp_salida: null,
+          counter,
         });
         const saveTimestamp = await timestamp.save();
         console.log("saveTimestamp:", saveTimestamp);

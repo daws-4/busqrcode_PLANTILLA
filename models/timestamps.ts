@@ -29,6 +29,11 @@ const timestamps = new Schema(
         type: String,
         default: null,
         trim: true,
+    },
+    counter:{
+        type: Number,
+        default: null,
+        trim: true,
     }
   },
   {
